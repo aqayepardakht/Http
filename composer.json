@@ -1,0 +1,15 @@
+{
+    "name": "aqayepardakht/http",
+    "autoload": {
+        "psr-4": {
+            "Aqayepardakht\\Http\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "AqayePardakht",
+            "email": "aqayepardakht@gmail.com"
+        }
+    ],
+    "require": {}
+}
