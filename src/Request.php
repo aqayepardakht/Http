@@ -2,59 +2,32 @@
 
 namespace Aqayepardakht\Http;
 
-class Http {
-    private $result     = null;
-    private $statusCode = null;
+class Request {
     private $headers    = [];
     private $params     = [];
-    private $message    = '';
     private $url        = '';
 
-    public function get($url, $params = []) {
-        $this->setParams($params);
-        return $this->instance($url, 'GET');
-    }
+    public function send($url, $method = 'GET', $params = []) {
+        $this->setUrl($url);
 
-    public function post($url, $params = []) {
-        $this->setParams($params);
-        return $this->instance($url, 'POST');
-    }
+        if (!empty($params)) $this->setParams($params);
 
-    protected function instance($url, $methode = 'GET') {
-        $this->url = $url;
-
-        $ch = curl_init($url);
+        $ch = curl_init($this->getUrl());
 
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_POSTFIELDS     => http_build_query($this->params),
             CURLOPT_HTTPHEADER     => $this->headers,
-            CURLOPT_CUSTOMREQUEST  => $methode
+            CURLOPT_CUSTOMREQUEST  => $method
         ]);
-
-        $this->result = curl_exec($ch);
-
-        if (curl_errno($ch)) {
-            $this->message = curl_error($ch);
-        }
-
-        $this->statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
         curl_close($ch);
 
-        return $this;
-    }
+        $response = new Response($ch);
 
-    public function body() {
-        return $this->result;
-    }
-
-    public function json() {
-        return json_decode($this->result);
-    }
-
-    public function status() {
-        return $this->statusCode;
+        unset($result, $message, $statusCode, $ch);
+        
+        return $response;
     }
 
     public function delParam($key, $value) {
@@ -83,18 +56,6 @@ class Http {
     public function appendHeaders($header, $value) {
         $this->headers[$header] = $value;
         return $this;
-    }
-
-    public function isSuccess() {
-        return ($this->status() >= 200 && $this->status() < 300);
-    }
-
-    public function isFailed() {
-        return ($this->status() >= 400);
-    }
-
-    public function getMessage() {
-        return $this->message;
     }
 
     public function getUrl() {
