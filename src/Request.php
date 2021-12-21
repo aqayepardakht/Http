@@ -17,17 +17,25 @@ class Request {
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_POSTFIELDS     => http_build_query($this->params),
-            CURLOPT_HTTPHEADER     => $this->headers,
+            CURLOPT_HTTPHEADER     => $this->buildHeaders($this->headers),
             CURLOPT_CUSTOMREQUEST  => $method
         ]);
 
         curl_close($ch);
 
-        $response = new Response($ch);
+       return new Response($ch);
+    }
 
-        unset($result, $message, $statusCode, $ch);
-        
-        return $response;
+    protected function buildHeaders($header) {
+        if (is_array($header)) {
+            $i_header = $header;
+            $header = [];
+            foreach ($i_header as $param => $value) {
+                $header[] = "$param: $value";
+            }
+        }
+
+        return $header;
     }
 
     public function delParam($key, $value) {
@@ -67,7 +75,7 @@ class Request {
     }
 
     public function withToken($token) {
-        $this->appendHeaders('Authorization: Bearer', $token);
+        $this->appendHeaders('Authorization', 'Bearer '.$token);
         return $this;
     }
 }
