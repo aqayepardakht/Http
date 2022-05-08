@@ -21,8 +21,6 @@ class Request {
             CURLOPT_CUSTOMREQUEST  => $method
         ]);
 
-        curl_close($ch);
-
        return new Response($ch);
     }
 
