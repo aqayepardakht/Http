@@ -12,9 +12,9 @@ class Response {
         $this->result     = curl_exec($ch);
         $this->statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-        curl_close($ch);
-
         if (curl_errno($ch)) $this->message = curl_error($ch);
+
+        curl_close($ch);
     }
 
     public function body() {
