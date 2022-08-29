@@ -18,7 +18,9 @@ class Request {
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_POSTFIELDS     => http_build_query($this->params),
             CURLOPT_HTTPHEADER     => $this->buildHeaders($this->headers),
-            CURLOPT_CUSTOMREQUEST  => $method
+            CURLOPT_CUSTOMREQUEST  => $method,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_SSL_VERIFYPEER => false
         ]);
 
        return new Response($ch);
