@@ -12,9 +12,10 @@ class Request {
 
         if (!empty($params)) $this->setParams($params);
 
-        $ch = curl_init($this->getUrl());
+        $ch = curl_init();
 
         curl_setopt_array($ch, [
+            CURLOPT_URL            => rtrim($this->getUrl(), '/'),
             CURLOPT_RETURNTRANSFER => 1,
             CURLOPT_POSTFIELDS     => http_build_query($this->params),
             CURLOPT_HTTPHEADER     => $this->buildHeaders($this->headers),
