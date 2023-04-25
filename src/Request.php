@@ -16,12 +16,15 @@ class Request {
 
         curl_setopt_array($ch, [
             CURLOPT_URL            => rtrim($this->getUrl(), '/'),
-            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POSTFIELDS     => http_build_query($this->params),
             CURLOPT_HTTPHEADER     => $this->buildHeaders($this->headers),
             CURLOPT_CUSTOMREQUEST  => $method,
             CURLOPT_SSL_VERIFYHOST => false,
-            CURLOPT_SSL_VERIFYPEER => false
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_MAXREDIRS      => 10,
+            CURLOPT_TIMEOUT        => 0,
+            CURLOPT_FOLLOWLOCATION => true,
         ]);
 
        return new Response($ch);
